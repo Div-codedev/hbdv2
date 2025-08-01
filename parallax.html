@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Parallax Kanha</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 50%, #90caf9 100%);
+    }
+
+    /* Page container */
+    .page {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; 
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transform: translateY(50px);
+      transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      pointer-events: none;
+      z-index: 0;
+      padding: 20px;
+    }
+
+    .page.active {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: all;
+    }
+
+    /* Glassmorphic container */
+    .glass-container {
+      background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.12) 0%,
+        rgba(255, 255, 255, 0.06) 100%
+      );
+      backdrop-filter: blur(6px) saturate(1.8);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 32px;
+      box-shadow:
+        0 20px 40px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5);
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeInUp 1s ease-out 0.3s forwards;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .glass-container::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      right: 0; bottom: 0;
+      background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.1) 0%, 
+        rgba(255, 255, 255, 0.05) 50%, 
+        rgba(255, 255, 255, 0.1) 100%);
+      border-radius: 32px;
+      pointer-events: none;
+    }
+
+    /* Canvas sizing and aspect ratios */
+    .ratio-1-1 {
+      width: min(80vw, 80vh, 500px);
+      height: min(80vw, 80vh, 500px);
+    }
+    
+    .ratio-3-2 {
+      width: min(90vw, 60vh * 1.5, 600px);
+      height: min(60vh, 90vw / 1.5, 400px);
+    }
+    
+    .ratio-2-3 {
+      width: min(70vw, 70vh * 0.667, 400px);
+      height: min(70vh, 70vw / 0.667, 600px);
+    }
+
+    canvas {
+      display: block;
+      width: 100% !important;
+      height: 100% !important;
+      border-radius: 24px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      position: relative;
+      z-index: 2;
+    }
+
+    /* Page headings */
+    .page-title {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 700;
+      color: #0d47a1;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.8s ease-out 0.1s forwards;
+      background: linear-gradient(135deg, #0d47a1, #1976d2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 0 2px 10px rgba(13, 71, 161, 0.3);
+    }
+
+    .page-subtitle {
+      font-size: 1.1rem;
+      color: #1565c0;
+      text-align: center;
+      margin-bottom: 2rem;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.8s ease-out 0.2s forwards;
+      font-weight: 400;
+    }
+
+    /* Navigation button */
+    .nav-button {
+      margin-top: 2rem;
+      padding: 14px 32px;
+      background: linear-gradient(135deg, #1976d2, #42a5f5);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 8px 25px rgba(25, 118, 210, 0.4);
+      transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.8s ease-out 0.5s forwards;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .nav-button::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: left 0.6s;
+    }
+
+    .nav-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 35px rgba(25, 118, 210, 0.5);
+    }
+
+    .nav-button:hover::before {
+      left: 100%;
+    }
+
+    .nav-button:active {
+      transform: translateY(0);
+    }
+
+    /* Bubble navigation */
+    .bubble-nav {
+      position: fixed;
+      right: 30px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50px;
+      padding: 12px 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      z-index: 10;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .nav-dot {
+      width: 12px;
+      height: 12px;
+      background: rgba(25, 118, 210, 0.5);
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      position: relative;
+    }
+
+    .nav-dot.active {
+      background: #1976d2;
+      transform: scale(1.3);
+      box-shadow: 0 0 15px rgba(25, 118, 210, 0.6);
+    }
+
+    .nav-dot:hover {
+      background: #1976d2;
+      transform: scale(1.2);
+    }
+
+    /* Intro modal */
+    #introModal {
+      position: fixed;
+      inset: 0;
+      background: rgba(13, 71, 161, 0.1);
+      backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      animation: modalFadeIn 0.5s ease-out;
+    }
+
+    @keyframes modalFadeIn {
+      from { opacity: 0; backdrop-filter: blur(0px); }
+      to { opacity: 1; backdrop-filter: blur(10px); }
+    }
+
+    .modal-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      padding: 40px;
+      border-radius: 24px;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+      max-width: 400px;
+      text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      transform: scale(0.9);
+      animation: modalScaleIn 0.5s ease-out 0.2s forwards;
+      margin: 20px;
+    }
+
+    @keyframes modalScaleIn {
+      to { transform: scale(1); }
+    }
+
+    .modal-card h3 {
+      font-size: 1.8rem;
+      color: #0d47a1;
+      margin-bottom: 1rem;
+      font-weight: 700;
+    }
+
+    .modal-card p {
+      color: #1565c0;
+      margin-bottom: 2rem;
+      font-size: 1.1rem;
+      line-height: 1.6;
+    }
+
+    .start-button {
+      padding: 16px 40px;
+      background: linear-gradient(135deg, #1976d2, #42a5f5);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 10px 30px rgba(25, 118, 210, 0.4);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .start-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 40px rgba(25, 118, 210, 0.5);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .bubble-nav {
+        right: 15px;
+        padding: 10px 6px;
+      }
+      
+      .page {
+        padding: 15px;
+      }
+      
+      .modal-card {
+        padding: 30px 25px;
+        max-width: 350px;
+      }
+      
+      .page-title {
+        margin-bottom: 1rem;
+      }
+      
+      .page-subtitle {
+        margin-bottom: 1.5rem;
+        font-size: 1rem;
+      }
+      
+      .nav-button {
+        margin-top: 1.5rem;
+        padding: 12px 28px;
+        font-size: 0.95rem;
+      }
+
+      .ratio-1-1 {
+        width: min(85vw, 85vh, 400px);
+        height: min(85vw, 85vh, 400px);
+      }
+      
+      .ratio-3-2 {
+        width: min(90vw, 50vh * 1.5, 500px);
+        height: min(50vh, 90vw / 1.5, 333px);
+      }
+      
+      .ratio-2-3 {
+        width: min(75vw, 60vh * 0.667, 350px);
+        height: min(60vh, 75vw / 0.667, 525px);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .bubble-nav {
+        right: 10px;
+        padding: 8px 5px;
+      }
+      
+      .nav-dot {
+        width: 10px;
+        height: 10px;
+      }
+      
+      .page {
+        padding: 10px;
+      }
+      
+      .glass-container {
+        padding: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Bubble navigation -->
+  <div class="bubble-nav">
+    <div class="nav-dot active" onclick="goToPage(0)"></div>
+    <div class="nav-dot" onclick="goToPage(1)"></div>
+    <div class="nav-dot" onclick="goToPage(2)"></div>
+  </div>
+
+  <!-- Page 1 -->
+  <div class="page active" id="page0">
+    <h1 class="page-title">✨ Sleeping Memories</h1>
+    <p class="page-subtitle">Nicee?</p>
+    <div class="glass-container ratio-2-3">
+      <canvas id="canvas0"></canvas>
+    </div>
+    <button class="nav-button" onclick="goToPage(1)">
+      Next →
+    </button>
+  </div>
+
+  <!-- Page 2 -->
+  <div class="page" id="page1">
+    <h1 class="page-title">🌟 Twilight Kanha</h1>
+    <p class="page-subtitle">Dive deeper into the parallax forest!</p>
+    <div class="glass-container ratio-3-2">
+      <canvas id="canvas1"></canvas>
+    </div>
+    <button class="nav-button" onclick="goToPage(2)">
+      Final Chapter →
+    </button>
+  </div>
+
+  <!-- Page 3 -->
+  <div class="page" id="page2">
+    <h1 class="page-title">💫 Dreams</h1>
+    <p class="page-subtitle">Kuch yaad aya?</p>
+    <div class="glass-container ratio-1-1">
+      <canvas id="canvas2"></canvas>
+    </div>
+    <button class="nav-button" onclick="navigateToNew()">
+      Continue 😎
+    </button>
+  </div>
+
+  <!-- Intro modal -->
+  <div id="introModal">
+    <div class="modal-card">
+      <h3>📸 ヾ(≧▽≦*)... Welcome</h3>
+      <p>Swipe or drag inside each frame to experience 2.5D parallax. Each page tells a unique story through interactive depth.</p>
+      <button class="start-button" onclick="closeModal()">Start Exploring ✨</button>
+    </div>
+  </div>
+
+  <script>
+    // Global functions for onclick handlers
+    function goToPage(pageIndex) {
+      if (pageIndex === window.currentPage) return;
+      
+      const pages = document.querySelectorAll('.page');
+      const navDots = document.querySelectorAll('.nav-dot');
+      
+      // Update active states
+      pages[window.currentPage].classList.remove('active');
+      navDots[window.currentPage].classList.remove('active');
+      
+      window.currentPage = pageIndex;
+      
+      pages[window.currentPage].classList.add('active');
+      navDots[window.currentPage].classList.add('active');
+      
+      // Trigger animations
+      const container = pages[window.currentPage].querySelector('.glass-container');
+      container.style.animation = 'none';
+      container.offsetHeight; // Trigger reflow
+      container.style.animation = 'fadeInUp 1s ease-out forwards';
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('introModal');
+      modal.style.animation = 'modalFadeIn 0.3s ease-out reverse';
+      setTimeout(() => modal.style.display = 'none', 300);
+    }
+
+    function navigateToNew() {
+      window.location.href = 'polaroid_wall.html';
+    }
+
+    // Make functions globally accessible
+    window.goToPage = goToPage;
+    window.closeModal = closeModal;
+    window.navigateToNew = navigateToNew;
+    window.currentPage = 0;
+  </script>
+
+<script type="module">
+  import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.152.0/build/three.module.js';
+
+  const imagePairs = [
+    {
+      main: 'm1.png',
+      depth: 'd1.png',
+      aspect: 2 / 3
+    },
+    {
+      main: 'm2.png',
+      depth: 'd2.png',
+      aspect: 3 / 2
+    },
+    {
+      main: 'm3.png',
+      depth: 'd3.png',
+      aspect: 1 / 1
+    }
+  ];
+
+  let currentPage = 0;
+  const pages = document.querySelectorAll('.page');
+  const navDots = document.querySelectorAll('.nav-dot');
+  const scenes = [];
+
+  window.currentPage = currentPage;
+
+  for (let i = 0; i < 3; i++) {
+    const canvas = document.getElementById(`canvas${i}`);
+    const container = canvas.parentElement;
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 10);
+    camera.position.z = 1;
+
+    const renderer = new THREE.WebGLRenderer({
+      canvas: canvas,
+      antialias: true,
+      alpha: true
+    });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+    const textureLoader = new THREE.TextureLoader();
+    const loadTextures = async () => {
+      try {
+        const [diffuseMap, depthMap] = await Promise.all([
+          textureLoader.loadAsync(imagePairs[i].main),
+          textureLoader.loadAsync(imagePairs[i].depth),
+        ]);
+
+        [diffuseMap, depthMap].forEach(t => {
+          t.minFilter = THREE.LinearFilter;
+          t.magFilter = THREE.LinearFilter;
+          t.generateMipmaps = false;
+        });
+
+        // Responsive canvas sizing function
+        const updateCanvasSize = () => {
+          const containerRect = container.getBoundingClientRect();
+          const width = containerRect.width - 48; // Account for glass container padding
+          const height = containerRect.height - 48;
+          
+          renderer.setSize(width, height, true);
+          canvas.style.width = width + 'px';
+          canvas.style.height = height + 'px';
+        };
+
+        // Initial sizing
+        updateCanvasSize();
+        
+        // Update on resize
+        window.addEventListener('resize', updateCanvasSize);
+
+        const material = new THREE.ShaderMaterial({
+          uniforms: {
+            diffuse: { value: diffuseMap },
+            depth: { value: depthMap },
+            uOffset: { value: new THREE.Vector2() },
+          },
+          vertexShader: `
+            varying vec2 vUv;
+            void main() {
+              vUv = uv;
+              gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            }
+          `,
+          fragmentShader: `
+            precision highp float;
+            uniform sampler2D diffuse;
+            uniform sampler2D depth;
+            uniform vec2 uOffset;
+            varying vec2 vUv;
+            void main() {
+              float depthVal = texture2D(depth, vUv).r;
+              vec2 parallax = (depthVal - 0.5) * uOffset * 0.1;
+              gl_FragColor = texture2D(diffuse, vUv + parallax);
+            }
+          `
+        });
+
+        const mesh = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), material);
+        scene.add(mesh);
+
+        let targetX = 0, targetY = 0;
+        let state = { x: 0, y: 0 };
+        let lastInteraction = Date.now();
+        const idleAmplitude = 0.39;
+
+        const updateTarget = (x, y, w, h) => {
+          targetX = (x / w) * 2 - 1;
+          targetY = -(y / h) * 2 + 1;
+        };
+
+        const handleMove = (x, y) => {
+          const rect = canvas.getBoundingClientRect();
+          const relX = x - rect.left;
+          const relY = y - rect.top;
+          if (relX >= 0 && relX <= rect.width && relY >= 0 && relY <= rect.height) {
+            lastInteraction = Date.now();
+            updateTarget(relX, relY, rect.width, rect.height);
+          }
+        };
+
+        canvas.addEventListener('pointermove', e => handleMove(e.clientX, e.clientY));
+        canvas.addEventListener('touchmove', e => {
+          e.preventDefault();
+          const touch = e.touches[0];
+          handleMove(touch.clientX, touch.clientY);
+        }, { passive: false });
+
+        const animate = () => {
+          const now = Date.now();
+          const idleTime = now - lastInteraction;
+          const isIdle = idleTime > 1000;
+
+          state.x += (targetX - state.x) * 0.1;
+          state.y += (targetY - state.y) * 0.1;
+
+          let finalX = state.x;
+          let finalY = state.y;
+
+          if (isIdle) {
+            const t = now * 0.001;
+            finalX = Math.sin(t * 0.4) * idleAmplitude;
+            finalY = Math.cos(t * 0.5) * idleAmplitude * 0.7;
+          }
+
+          const clamp = (val, min, max) => Math.max(min, Math.min(max, val));
+          const maxOffset = 0.35;
+          material.uniforms.uOffset.value.set(
+            clamp(finalX, -maxOffset, maxOffset),
+            clamp(finalY, -maxOffset, maxOffset)
+          );
+
+          renderer.render(scene, camera);
+          requestAnimationFrame(animate);
+        };
+
+        animate();
+
+      } catch (error) {
+        console.warn(`Failed to load textures for canvas ${i}:`, error);
+      }
+    };
+
+    loadTextures();
+    scenes.push({ scene, camera, renderer });
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ') {
+      e.preventDefault();
+      if (window.currentPage < 2) {
+        window.goToPage(window.currentPage + 1);
+      } else {
+        window.navigateToNew();
+      }
+    } else if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      window.goToPage((window.currentPage - 1 + 3) % 3);
+    }
+  });
+</script>
+</body>
+</html>
