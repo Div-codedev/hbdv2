@@ -1,13 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Meta tags ko set karna for basic page setup -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
+    <!-- Title set karna -->
     <title>Radhe Krishna</title>
+
+    <!-- Google Fonts ko link karna for typography -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700&family=Playfair+Display:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
+    <!-- Inline CSS style sheet start karna -->
     <style>
+        /* Root variables define karna for consistent styling */
         :root {
             --glass-bg: rgba(0, 0, 0, 0.25);
             --glass-border: rgba(255, 255, 255, 0.3);
@@ -18,16 +24,19 @@
             --shadow-strong: 0 20px 60px rgba(0, 0, 0, 0.4);
         }
 
+        /* Global reset aur base styling karna */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
+        /* HTML smooth scrolling enable karna */
         html {
             scroll-behavior: smooth;
         }
 
+        /* Body base styling set karna, including scrollbar customization */
         body {
             font-family: 'Inter', sans-serif;
             color: var(--text-primary);
@@ -37,6 +46,7 @@
             position: relative;
         }
 
+        /* Webkit scrollbar customize karna for Chrome/Safari */
         body::-webkit-scrollbar {
             width: 6px;
         }
@@ -50,7 +60,7 @@
             border-radius: 10px;
         }
 
-        /* Enhanced Gradient Background System */
+        /* Enhanced Gradient Background System setup karna */
         .gradient-overlay {
             position: fixed;
             top: 0;
@@ -65,6 +75,7 @@
             transition: opacity 1s ease-in-out;
         }
 
+        /* Gradient overlay ke pseudo elements add karna for layering */
         .gradient-overlay::before,
         .gradient-overlay::after {
             content: '';
@@ -77,7 +88,7 @@
             z-index: -1;
         }
 
-        /* Section Radial Blur Enhancement */
+        /* Section ke liye radial blur enhancement add karna */
         section .radial-blur {
             position: absolute;
             top: 50%;
@@ -90,55 +101,7 @@
             z-index: -5;
         }
 
-        /* Enhanced floating petals */
-        .petals {
-            position: fixed;
-            top: 0;
-            left: 0;
-            pointer-events: none;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-            overflow: hidden;
-        }
-
-        .petal {
-            position: absolute;
-            width: clamp(6px, 1.2vw, 16px);
-            height: clamp(9px, 1.8vw, 24px);
-            opacity: 0;
-            animation: floatModern 18s ease-in-out infinite;
-            background: linear-gradient(45deg, 
-                rgba(255, 255, 255, 0.6) 0%,
-                rgba(248, 199, 220, 0.3) 50%,
-                rgba(135, 206, 235, 0.2) 100%);
-            border-radius: 50% 10% 50% 10%;
-            backdrop-filter: blur(1px);
-            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
-        }
-
-        @keyframes floatModern {
-            0% {
-                transform: translateY(-100vh) translateX(0) rotateZ(0deg) scale(0.3);
-                opacity: 0;
-            }
-            10% {
-                opacity: 0.7;
-            }
-            50% {
-                transform: translateY(50vh) translateX(clamp(-40px, 8vw, 40px)) rotateZ(180deg) scale(1);
-                opacity: 0.8;
-            }
-            90% {
-                opacity: 0.3;
-            }
-            100% {
-                transform: translateY(110vh) translateX(clamp(-80px, -15vw, -15px)) rotateZ(360deg) scale(0.1);
-                opacity: 0;
-            }
-        }
-
-        /* Modern light orbs */
+        /* Modern light orbs styling karna */
         .light-orbs {
             position: fixed;
             top: 0;
@@ -149,6 +112,7 @@
             z-index: 2;
         }
 
+        /* Individual orb styling aur animation */
         .orb {
             position: absolute;
             width: clamp(3px, 0.6vw, 8px);
@@ -162,6 +126,7 @@
             filter: blur(0.5px);
         }
 
+        /* Orb float animation define karna */
         @keyframes orbFloatModern {
             0%, 100% {
                 transform: translate(0, 0) scale(0.3);
@@ -181,7 +146,7 @@
             }
         }
 
-        /* Modern Navigation with Green Glowing Glass Capsule */
+        /* Modern Navigation styling with green glowing glass capsule */
         .nav-modern {
             position: fixed;
             right: clamp(1.5rem, 4vw, 3rem);
@@ -207,6 +172,7 @@
             animation: navGlow 3s ease-in-out infinite alternate;
         }
 
+        /* Nav glow animation define karna */
         @keyframes navGlow {
             0% {
                 box-shadow: 
@@ -222,6 +188,7 @@
             }
         }
 
+        /* Nav hover effects add karna */
         .nav-modern:hover {
             background: linear-gradient(135deg, 
                 rgba(0, 255, 127, 0.25) 0%,
@@ -234,6 +201,7 @@
                 inset 0 1px 0 rgba(255, 255, 255, 0.4);
         }
 
+        /* Nav dot styling karna */
         .nav-dot {
             width: clamp(10px, 2.5vw, 14px);
             height: clamp(10px, 2.5vw, 14px);
@@ -249,6 +217,7 @@
             overflow: hidden;
         }
 
+        /* Nav dot ke pseudo element for inner glow */
         .nav-dot::before {
             content: '';
             position: absolute;
@@ -263,6 +232,7 @@
             box-shadow: 0 0 8px rgba(0, 255, 127, 0.4);
         }
 
+        /* Nav dot hover state */
         .nav-dot:hover {
             transform: scale(1.3);
             background: linear-gradient(135deg, 
@@ -272,6 +242,7 @@
             border-color: rgba(0, 255, 127, 0.6);
         }
 
+        /* Active nav dot styling */
         .nav-dot.active {
             background: linear-gradient(135deg, 
                 rgba(0, 255, 127, 0.5) 0%,
@@ -281,6 +252,7 @@
             border-color: rgba(0, 255, 127, 0.8);
         }
 
+        /* Active nav dot inner glow */
         .nav-dot.active::before {
             background: rgba(0, 255, 127, 1);
             width: 6px;
@@ -288,6 +260,7 @@
             box-shadow: 0 0 12px rgba(0, 255, 127, 0.8);
         }
 
+        /* Nav tooltip styling */
         .nav-tooltip {
             position: absolute;
             right: calc(100% + 20px);
@@ -307,12 +280,13 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
+        /* Tooltip show on hover */
         .nav-dot:hover .nav-tooltip {
             opacity: 1;
             transform: translateY(-50%) translateX(-8px);
         }
 
-        /* Mobile-First Section Layout - Centered */
+        /* Mobile-First Section Layout - Centered styling */
         section {
             min-height: 100vh;
             padding: clamp(2rem, 5vh, 4rem) clamp(1rem, 4vw, 2rem);
@@ -327,12 +301,13 @@
             z-index: 1;
         }
 
+        /* Section visible state */
         section.visible {
             opacity: 1;
             transform: translateY(0);
         }
 
-        /* Centered Layout Container */
+        /* Section container for content alignment */
         .section-container {
             width: 100%;
             max-width: 1200px;
@@ -344,7 +319,7 @@
             text-align: center;
         }
 
-        /* Image Half - Top on Mobile, Left on Desktop - Centered */
+        /* Image half styling - Top on mobile */
         .image-half {
             width: 100%;
             display: flex;
@@ -354,12 +329,12 @@
             text-align: center;
         }
 
+        /* Image container styling */
         .image-container {
             position: relative;
             width: clamp(280px, 70vw, 400px);
             height: clamp(320px, 60vh, 450px);
             margin: 0 auto clamp(1rem, 2vh, 1.5rem);
-            /* Completely borderless for clean look */
             border: none;
             background: transparent;
             animation: subtleFloat 6s ease-in-out infinite;
@@ -368,17 +343,17 @@
             justify-content: center;
         }
 
+        /* Silhouette image styling */
         .silhouette {
             width: 100%;
             height: 100%;
             object-fit: contain;
             transition: all 0.6s ease;
             filter: contrast(1.1) brightness(1.05);
-            /* Transparent background support */
             background: transparent;
         }
 
-        /* Subtle Floating Animation */
+        /* Subtle floating animation for images */
         @keyframes subtleFloat {
             0%, 100% {
                 transform: translateY(0) scale(1);
@@ -388,7 +363,7 @@
             }
         }
 
-        /* Stylized Title Below Image */
+        /* Section title styling below image */
         .section-title {
             font-family: 'Playfair Display', serif;
             font-size: clamp(1.8rem, 4vw, 2.8rem);
@@ -409,17 +384,19 @@
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         }
 
+        /* Title visible state in section */
         section.visible .section-title {
             opacity: 1;
             transform: translateY(0);
         }
 
+        /* Text shimmer animation define karna */
         @keyframes textShimmer {
             0%, 100% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
         }
 
-        /* Text Half - Bottom on Mobile, Right on Desktop - Centered */
+        /* Text half styling - Bottom on mobile */
         .text-half {
             width: 100%;
             display: flex;
@@ -427,6 +404,7 @@
             justify-content: center;
         }
 
+        /* Text container glass effect */
         .text-container {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(60px);
@@ -441,6 +419,7 @@
             margin: 0 auto;
         }
 
+        /* Text container hover effect */
         .text-container:hover {
             transform: translateY(-4px);
             box-shadow: var(--shadow-medium);
@@ -448,6 +427,7 @@
             background: rgba(255, 255, 255, 0.9);
         }
 
+        /* Paragraph styling inside text container */
         .text-container p {
             font-size: clamp(1rem, 2.2vw, 1.3rem);
             line-height: 1.7;
@@ -459,76 +439,87 @@
             transition: all 1.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.6s;
         }
 
+        /* Paragraph visible state */
         section.visible .text-container p {
             opacity: 1;
             transform: translateY(0);
         }
 
-        /* Floating Hearts with Proper Z-Index */
+        /* Floating hearts styling with proper z-index */
         .heart-particles {
             position: absolute;
             top: 20%;
             left: 50%;
+            width: 36px;
+            height:36px;
             transform: translate(-50%, -50%);
             pointer-events: none;
             z-index: 100; /* High z-index to ensure visibility above all content */
         }
 
+        /* Heart shape styling */
         .heart {
             position: absolute;
-            width: 20px;
+            width: 22px;
             height: 18px;
             transform: rotate(45deg);
-            animation: heartFloatModern 10s ease-in-out infinite;
-          }
+            animation: heartFloatModern 7s ease-in-out infinite;
+        }
           
-          .heart::before,
-          .heart::after {
+        /* Heart lobes using pseudo elements */
+        .heart::before,
+        .heart::after {
             content: '';
             position: absolute;
-            width: 14px;
-            height: 22px;
-            background: linear-gradient(45deg, #ff4d88, #ffc0cb);
+            top: 7px;
+            left: 16px;
+            width: 18px;
+            height: 25px;
+            background: linear-gradient(135deg, #ff85a1, #ff4d88);
+            box-shadow: 0 0 15px 2px rgba(255, 107, 129, 0.6);
             border-radius: 50% 50% 0 0;
-            opacity: 0.9;
-            filter: blur(0.2px);
-          }
+        }
           
-          .heart::before {
-            left: 0px;
-            top: 0;
+        /* First lobe of heart */
+        .heart::before {
             transform: rotate(-45deg);
-            transform-origin: 0 100%;
-          }
+            transform-origin: 0 100%; 
+            box-shadow: 0 0 15px 2px rgba(255, 77, 136, 0.6);
+        }
           
-          .heart::after {
+        /* Second lobe of heart */
+        .heart::after {
             left: 0;
-            top: 0;
             transform: rotate(45deg);
             transform-origin: 100% 100%;
-          }
-          
+            box-shadow: 0 0 15px 2px rgba(255, 77, 136, 0.6);
+        }
         
+        /* Heart float animation define karna */
         @keyframes heartFloatModern {
             0%, 100% {
-                transform: rotate(45deg) translate(0, 0) scale(0.4);
-                opacity: 0;
+                transform: translateY(0) scale(0.5) rotate(-90deg);
+                opacity: 1;
             }
             25% {
-                transform: rotate(45deg) translate(-25px, -35px) scale(0.8);
+                transform: rotate(45deg) translate(-25px, -35px) scale(1) rotate(-20deg);
                 opacity: 0.7;
             }
             50% {
-                transform: rotate(45deg) translate(35px, -70px) scale(0.6);
+                transform: rotate(45deg) translate(35px, -70px) scale(1.2) rotate(20deg);
                 opacity: 0.9;
             }
             75% {
-                transform: rotate(45deg) translate(-15px, -105px) scale(1);
-                opacity: 0.5;
+                transform: translateY(-400px) translateX(-40px) scale(0.9) rotate(-10deg);
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(-800px) translateX(20px) scale(0.5) rotate(-30deg);
+                opacity: 0;
             }
         }
 
-        /* Desktop Layout - Side by Side */
+        /* Desktop layout - Side by side for larger screens */
         @media (min-width: 768px) {
             .section-container {
                 flex-direction: row;
@@ -560,7 +551,7 @@
             }
         }
 
-        /* Continue Section */
+        /* Continue section styling */
         .continue-section {
             min-height: 100vh;
             display: flex;
@@ -573,11 +564,13 @@
             transition: all 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
+        /* Continue section visible state */
         .continue-section.visible {
             opacity: 1;
             transform: translateY(0);
         }
 
+        /* Continue message styling */
         .continue-message {
             font-family: 'Playfair Display', serif;
             font-size: clamp(1.8rem, 4vw, 3rem);
@@ -593,6 +586,7 @@
             letter-spacing: 2px;
         }
 
+        /* Continue button styling */
         .continue-btn {
             background: var(--glass-bg);
             backdrop-filter: blur(25px);
@@ -611,6 +605,7 @@
             box-shadow: var(--shadow-soft);
         }
 
+        /* Button pseudo element for hover gradient */
         .continue-btn::before {
             content: '';
             position: absolute;
@@ -623,6 +618,7 @@
             z-index: -1;
         }
 
+        /* Button hover effect */
         .continue-btn:hover {
             transform: translateY(-6px) scale(1.05);
             box-shadow: var(--shadow-medium);
@@ -633,11 +629,12 @@
             left: 0;
         }
 
+        /* Button active state */
         .continue-btn:active {
             transform: translateY(-3px) scale(1.02);
         }
 
-        /* Scroll Indicator */
+        /* Scroll indicator styling */
         .scroll-indicator {
             position: fixed;
             bottom: clamp(2rem, 5vh, 4rem);
@@ -648,6 +645,7 @@
             transition: opacity 1s ease;
         }
 
+        /* Scroll indicator line */
         .scroll-indicator::before {
             content: '';
             display: block;
@@ -663,6 +661,7 @@
             border-radius: 2px;
         }
 
+        /* Scroll indicator arrow */
         .scroll-indicator::after {
             content: '↓';
             display: block;
@@ -672,13 +671,14 @@
             animation: bounceModern 2.5s infinite;
         }
 
+        /* Bounce animation for scroll indicator */
         @keyframes bounceModern {
             0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
             40% { transform: translateY(-6px); }
             60% { transform: translateY(-3px); }
         }
 
-        /* Responsive Adjustments */
+        /* Responsive adjustments for medium screens */
         @media (max-width: 768px) {
             .nav-modern {
                 right: 1rem;
@@ -691,6 +691,7 @@
             }
         }
 
+        /* Responsive adjustments for small screens */
         @media (max-width: 480px) {
             .nav-modern {
                 right: 0.8rem;
@@ -703,10 +704,9 @@
             }
         }
 
-        /* Performance optimizations */
+        /* Performance optimizations for elements */
         .silhouette,
         .image-container,
-        .petal,
         .orb,
         section,
         .text-container {
@@ -717,16 +717,13 @@
     </style>
 </head>
 <body>
-    <!-- Enhanced Gradient Background System -->
+    <!-- Enhanced Gradient Background System container -->
     <div class="gradient-overlay" id="gradientOverlay"></div>
 
-    <!-- Enhanced floating petals -->
-    <div class="petals" id="petalsContainer"></div>
-
-    <!-- Magical light orbs -->
+    <!-- Magical light orbs container -->
     <div class="light-orbs" id="orbsContainer"></div>
 
-    <!-- Modern Navigation -->
+    <!-- Modern Navigation structure -->
     <div class="nav-modern">
         <div class="nav-dot" data-section="krishna">
             <div class="nav-tooltip">The Birth of Melody</div>
@@ -745,10 +742,10 @@
         </div>
     </div>
 
-    <!-- Scroll indicator -->
+    <!-- Scroll indicator element -->
     <div class="scroll-indicator"></div>
 
-    <!-- Mobile-First Sections with Gradient Backgrounds -->
+    <!-- Krishna section with data-bg for gradient -->
     <section id="krishna" data-bg="linear-gradient(180deg, #87ceeb 0%, #f0f8ff 50%, #e6f3ff 100%)">
         <div class="radial-blur"></div>
         <div class="heart-particles">
@@ -776,6 +773,7 @@
         </div>
     </section>
 
+    <!-- Radha section -->
     <section id="radha" data-bg="linear-gradient(180deg, #fbc2eb 0%, #f8c7dc 50%, #f5d0e0 100%)">
         <div class="radial-blur"></div>
         <div class="heart-particles">
@@ -803,6 +801,7 @@
         </div>
     </section>
 
+    <!-- Union section -->
     <section id="union" data-bg="linear-gradient(180deg, #a18cd1 0%, #fbc2eb 50%, #e8b5d6 100%)">
         <div class="radial-blur"></div>
         <div class="heart-particles">
@@ -830,6 +829,7 @@
         </div>
     </section>
 
+    <!-- Eternal section -->
     <section id="eternal" data-bg="linear-gradient(180deg, #b0e0e6 0%, #fff8dc 50%, #f0f8e6 100%)">
         <div class="radial-blur"></div>
         <div class="heart-particles">
@@ -858,28 +858,30 @@
         </div>
     </section>
 
-    <!-- Continue Section -->
+    <!-- Continue section -->
     <section id="continue" class="continue-section" data-bg="linear-gradient(180deg, #4fc3f7 0%, #e1f5fe 50%, #f0f9ff 100%)">
-        <div class="radial-blur"></div>
         <div class="continue-message">Where Flute Leads, You Follow...</div>
         <button class="continue-btn" onclick="handleContinue()">Continue</button>
     </section>
 
+    <!-- Inline JavaScript script start karna -->
     <script>
+        // DivineLoveExperience class define karna for managing page effects
         class DivineLoveExperience {
             constructor() {
+                // Elements ko select aur store karna
                 this.sections = document.querySelectorAll('section');
-                this.petalsContainer = document.getElementById('petalsContainer');
                 this.orbsContainer = document.getElementById('orbsContainer');
                 this.scrollIndicator = document.querySelector('.scroll-indicator');
                 this.navDots = document.querySelectorAll('.nav-dot');
                 this.gradientOverlay = document.getElementById('gradientOverlay');
                 
+                // Init function call karna
                 this.init();
             }
 
+            // Initialization methods ko call karna
             init() {
-                this.createPetals();
                 this.createOrbs();
                 this.setupScrollAnimations();
                 this.setupNavigation();
@@ -888,19 +890,7 @@
                 this.addImageLoadEffects();
             }
 
-            createPetals() {
-                const petalCount = window.innerWidth < 768 ? 20 : 35;
-                
-                for (let i = 0; i < petalCount; i++) {
-                    const petal = document.createElement('div');
-                    petal.className = 'petal';
-                    petal.style.left = Math.random() * 100 + '%';
-                    petal.style.animationDelay = Math.random() * 18 + 's';
-                    petal.style.animationDuration = (15 + Math.random() * 8) + 's';
-                    this.petalsContainer.appendChild(petal);
-                }
-            }
-
+            // Light orbs create karna
             createOrbs() {
                 const orbCount = window.innerWidth < 768 ? 6 : 12;
                 
@@ -915,8 +905,9 @@
                 }
             }
 
+            // Gradient backgrounds setup karna with crossfade
             setupGradientBackgrounds() {
-                // Create two overlay elements for smooth crossfading
+                // Crossfade ke liye two overlays create karna
                 let currentOverlay = document.createElement('div');
                 let nextOverlay = document.createElement('div');
 
@@ -930,6 +921,7 @@
 
                 let lastGradient = '';
 
+                // Gradient crossfade function
                 const crossfadeToGradient = (gradient) => {
                     nextOverlay.style.background = gradient;
                     nextOverlay.style.opacity = '0';
@@ -940,12 +932,12 @@
                     }, 10);
                 };
 
-                // Set initial gradient
+                // Initial gradient set karna
                 const firstGradient = document.querySelector('section').getAttribute('data-bg');
                 currentOverlay.style.background = firstGradient;
                 lastGradient = firstGradient;
 
-                // Handle gradient changes on scroll
+                // Scroll par gradient change handle karna
                 window.addEventListener('scroll', () => {
                     let current = null;
                     const midpoint = window.scrollY + window.innerHeight / 2;
@@ -968,6 +960,7 @@
                 }, { passive: true });
             }
 
+            // Navigation setup karna with click and scroll events
             setupNavigation() {
                 this.navDots.forEach(dot => {
                     dot.addEventListener('click', () => {
@@ -979,7 +972,7 @@
                     });
                 });
 
-                // Update active dot on scroll
+                // Scroll par active dot update karna
                 window.addEventListener('scroll', () => {
                     const scrollPosition = window.pageYOffset + window.innerHeight / 2;
                     
@@ -997,6 +990,7 @@
                 }, { passive: true });
             }
 
+            // Scroll animations setup karna using IntersectionObserver
             setupScrollAnimations() {
                 const observerOptions = {
                     threshold: 0.15,
@@ -1008,7 +1002,7 @@
                         if (entry.isIntersecting) {
                             entry.target.classList.add('visible');
                             
-                            // Add staggered animations for child elements
+                            // Heart animation trigger karna with delay
                             setTimeout(() => {
                                 this.triggerHeartAnimation(entry.target);
                             }, 600);
@@ -1021,6 +1015,7 @@
                 });
             }
 
+            // Heart animation trigger karna in section
             triggerHeartAnimation(section) {
                 const hearts = section.querySelectorAll('.heart');
                 hearts.forEach((heart, index) => {
@@ -1030,6 +1025,7 @@
                 });
             }
 
+            // Scroll indicator hide karna after first scroll
             hideScrollIndicator() {
                 let hasScrolled = false;
                 window.addEventListener('scroll', () => {
@@ -1040,6 +1036,7 @@
                 }, { passive: true });
             }
 
+            // Image load par effects add karna
             addImageLoadEffects() {
                 const images = document.querySelectorAll('.silhouette');
                 images.forEach(img => {
@@ -1050,19 +1047,19 @@
             }
         }
 
-        // Continue button functionality
+        // Continue button ke liye function define karna
         function handleContinue() {
             window.location.href = 'parallax.html';
         }
 
-        // Initialize the experience
+        // DOM load hone par experience initialize karna
         document.addEventListener('DOMContentLoaded', () => {
             new DivineLoveExperience();
         });
 
-        // Performance optimization
+        // Performance optimization for critical elements
         document.addEventListener('DOMContentLoaded', () => {
-            // Preload critical elements
+            // Critical elements ko preload aur optimize karna
             const criticalElements = document.querySelectorAll('section, .image-container, .silhouette, .text-container');
             criticalElements.forEach(el => {
                 el.style.transform = 'translateZ(0)';
